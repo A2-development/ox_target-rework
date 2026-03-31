@@ -5,6 +5,11 @@
   --color-hover: white;
 }
 
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
 body {
   visibility: hidden;
   user-select: none;
@@ -12,6 +17,7 @@ body {
   margin: 0;
   user-select: none;
   overflow: hidden;
+  
 }
 
 p {
@@ -27,18 +33,85 @@ p {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 22pt;
-  fill: black;
 }
 
-.eye-hover {
-  fill: var(--color-default);
+#eyeSvg {
+  width: 28px;
+  height: 28px;
+  border: 8px solid rgba(0, 0, 0, 0.795);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  background-color: transparent;
+  box-shadow: 0 0 3px rgba(0,0,0,0.5);
+  transition: all 0.2s ease;
 }
+
+#eyeSvg .target-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: none;
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.8);
+}
+
+#eyeSvg.eye-hover {
+  border-color: rgba(0, 0, 0, 0.801);
+  background-color: rgba(255, 255, 255, 0.1);
+  width: 40px;
+  height: 40px;
+}
+
+#eyeSvg.eye-hover .target-dot {
+  display: block;
+}
+
+#eyeSvg.eye-hover::after {
+  content: '';
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  width: 25px;
+  height: 2px;
+  background-color: #ffffff;
+  transform: translateY(-50%);
+  display: block;
+  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.8); 
+}
+
+#eyeSvg.eye-hover::before {
+  content: '';
+  position: absolute;
+  left: calc(100% + 25px); 
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transform: translate(0, -50%);
+  display: block;
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.8); 
+}
+
 
 #options-wrapper {
   position: absolute;
-  top: calc(48.4%);
-  left: calc(50% + 18pt);
+  top: 50%; 
+  left: calc(50% + 12px + 25px + 6px + 10px);
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background-color: transparent;
+  pointer-events: auto;
+  z-index: 10;
+  display: none;
+}
+
+#options-wrapper.visible {
+  display: block;
 }
 
 .option-container {
@@ -48,22 +121,21 @@ p {
   justify-content: flex-start;
   align-items: center;
   font-family: "Nunito";
-  background: linear-gradient(
-    90deg,
-    rgba(20, 20, 20, 0.7) 0%,
-    rgba(20, 20, 20, 0.6) 66%,
-    rgba(47, 48, 53, 0) 100%
-  );
+  background: rgba(0, 0, 0, 0.877);
   font-size: 11pt;
   line-height: 22pt;
   vertical-align: middle;
-  margin: 2pt;
+  margin: 0;
   transition: 300ms;
   transform-origin: left top;
   scale: 1;
   height: 22pt;
-  width: 150pt;
-  top: 0;
+  width: 150pt; 
+  position: absolute; 
+  left: 0;
+  transform: translateY(-50%); 
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .option-container:hover {
@@ -76,6 +148,7 @@ p {
   transform-origin: left top;
   color: var(--color-hover);
   margin-left: 4pt;
+  transform: translateY(-50%);
 }
 
 .option-icon {
@@ -88,4 +161,120 @@ p {
 
 .option-label {
   font-weight: 500;
+  display: block;
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  flex: 1; 
+  margin-right: 5px;
+}
+
+body.radial-active #eye {
+  display: none !important;
+}
+
+body.radial-active,
+body.radial-active * {
+  cursor: none !important;
+}
+
+#options-wrapper.radial {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    transparent 0%,
+    transparent 39%,
+    rgba(0, 0, 0, 0.877) 40%,
+    rgba(0, 0, 0, 0.877) 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#options-wrapper.radial::before {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-color: #dddddd;
+  border-radius: 50%;
+  z-index: -1;
+  box-shadow: 0 0 30px rgb(0, 0, 0);
+}
+
+#options-wrapper.radial::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 14px solid white;
+  z-index: 0; 
+  transform: translate(-50%, -50%) rotate(var(--mouse-angle, 0rad)) translateY(-38px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+#options-wrapper.radial.visible::after {
+  opacity: 1;
+}
+
+#options-wrapper.radial .option-container {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border-radius: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
+
+#options-wrapper.radial .option-container:hover,
+#options-wrapper.radial .option-container.selected {
+  transform: translate(-50%, -50%) scale(1.2);
+  margin-left: 0;
+}
+
+#options-wrapper.radial .option-icon {
+  font-size: 18pt;
+  margin: 0;
+  width: auto;
+}
+
+#options-wrapper.radial .option-label {
+  display: none;
+}
+
+#target-label {
+  position: absolute;
+  top: calc(50% + 140px);
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-family: "Nunito", sans-serif;
+  font-size: 16pt;
+  font-weight: 600;
+  text-shadow: 0 0 4px rgba(0,0,0,0.8);
+  pointer-events: none;
+  text-align: center;
+  min-height: 24px;
+  display: none;
+}
+
+body.radial-active #target-label {
+  display: block;
 }

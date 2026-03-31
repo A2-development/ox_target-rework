@@ -161,7 +161,7 @@ local function startTargeting()
                     state.setNuiFocus(false, false)
                 end
             elseif hasTarget and IsDisabledControlJustPressed(0, mouseButton) then
-                state.setNuiFocus(true, true)
+                state.setNuiFocus(true, false)
             end
 
             Wait(0)
